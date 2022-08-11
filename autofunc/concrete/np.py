@@ -1,5 +1,6 @@
 # +
 from functools import partial
+from typing import Sequence
 
 import numpy as np
 
@@ -11,7 +12,7 @@ __all__ = ["np32", "np64"]
 
 class Generators_np32(ab.Generators):
     @staticmethod
-    def constant(object) -> np.ndarray:
+    def tensor(object) -> np.ndarray:
         return np.asarray(object, dtype=np.float32)
 
     @staticmethod
@@ -33,7 +34,7 @@ class Generators_np32(ab.Generators):
 
 class Generators_np64(ab.Generators):
     @staticmethod
-    def constant(object) -> np.ndarray:
+    def tensor(object) -> np.ndarray:
         return np.asarray(object, dtype=np.float64)
 
     @staticmethod
@@ -53,15 +54,18 @@ class Generators_np64(ab.Generators):
         return np.full(shape, value, dtype=np.float64)
 
 
+class Segments_np(ab.Segments):
+    @staticmethod
+    def cat(x: Sequence[np.ndarray], dim: int = 0) -> np.ndarray:
+        return np.concatenate(x, axis=dim)
+
+
 class Elemental_np(ab.Elemental):
     @staticmethod
     def sin(x: np.ndarray) -> np.ndarray:
         return np.sin(x)
 
 
-np32 = partial(
-    concrete, cfg={ab.Generators: Generators_np32, ab.Elemental: Elemental_np}
-)
-np64 = partial(
-    concrete, cfg={ab.Generators: Generators_np64, ab.Elemental: Elemental_np}
-)
+_cfg = {ab.Elemental: Elemental_np, ab.Segments: Segments_np}
+np32 = partial(concrete, cfg={ab.Generators: Generators_np32, **_cfg})
+np64 = partial(concrete, cfg={ab.Generators: Generators_np64, **_cfg})

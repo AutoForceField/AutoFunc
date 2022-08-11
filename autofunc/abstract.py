@@ -48,11 +48,20 @@ class Tensor(abc.ABC):
     def __rpow__(self, other: "Tensor" | float | int) -> "Tensor":
         ...
 
+    @property
+    @abc.abstractmethod
+    def shape(self) -> tuple[int]:
+        ...
+
+    @abc.abstractmethod
+    def reshape(self, shape: int | tuple[int, ...]) -> "Tensor":
+        ...
+
 
 class Generators(abc.ABC):
     @staticmethod
     @abc.abstractmethod
-    def constant(object) -> Tensor:
+    def tensor(object) -> Tensor:
         ...
 
     @staticmethod
@@ -88,3 +97,7 @@ class Elemental(abc.ABC):
     @abc.abstractmethod
     def sin(t: Tensor) -> Tensor:
         ...
+
+
+class Abstract(Elemental, Segments, Generators):
+    pass
