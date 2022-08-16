@@ -2,10 +2,10 @@
 import autofunc.abstract as ab
 
 
-class Example(ab.Elemental, ab.Generators):
+class Example(ab.Abs):
     def __init__(self):
-        self.a = self.tensor(2.0)
-        self.b = self.tensor(3.0)
+        self.a = self.tens(2.0)
+        self.b = self.tens(3.0)
 
-    def __call__(self, t: ab.Tensor) -> ab.Tensor:
+    def __call__(self, t: ab.Tens) -> ab.Tens:
         return self.a * self.sin(t) + self.b
